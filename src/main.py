@@ -1,10 +1,10 @@
 import tmdbsimple as tmdb
-import ConfigParser
+import configparser
 import time
 import os
 from datetime import datetime
 
-config = ConfigParser.RawConfigParser()
+config = configparser.ConfigParser()
 config.read('movlibgen.cfg')
 x = 'abcdefghijklmnopqrstuvwxyz'
 path = config.get('CONFIG', 'PATH')
@@ -13,7 +13,7 @@ tmdb.API_KEY = config.get('CONFIG', 'API_KEY')
 search = tmdb.Search()
 
 for i in x:
-	for p in range(1, 20):
+	for p in range(1, 400):
 		response = search.movie(query=i, page=str(p), include_adult='no')
 		print (search.total_results)
 		print (search.page)
@@ -27,7 +27,7 @@ for i in x:
 				fakemovie = fakemovie.replace(" ", "_")
 				fakemovie += "_"
 				fakemovie += str(movie_year)
-				fakemovie += ".mp4"
+				fakemovie += ".ts"
 
 				fullsample = path
 				fullsample += "/"
@@ -39,6 +39,6 @@ for i in x:
 
 				print(str(s['title']), movie_year)
 				os.symlink(fullsample, fullfakemovie)
-			except:
-				print "Skip to next"
+			except Exception as e:
+				print ("Skip to next" + str(e))
 		time.sleep(1)
